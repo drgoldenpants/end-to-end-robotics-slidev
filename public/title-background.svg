@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Dark abstract robotics title background">
+  <defs>
+    <linearGradient id="leftBeam" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#050505"/>
+      <stop offset=".42" stop-color="#2d2d2d"/>
+      <stop offset=".55" stop-color="#0b0b0b"/>
+      <stop offset="1" stop-color="#000"/>
+    </linearGradient>
+    <linearGradient id="softBeam" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".45" stop-color="#fff" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="lightDisc" cx=".48" cy=".38" r=".62">
+      <stop offset="0" stop-color="#d7d7d7"/>
+      <stop offset=".82" stop-color="#b5b5b5"/>
+      <stop offset="1" stop-color="#a9a9a9"/>
+    </radialGradient>
+    <linearGradient id="redDisc" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ff3b24"/>
+      <stop offset="1" stop-color="#f1130a"/>
+    </linearGradient>
+    <filter id="blur2">
+      <feGaussianBlur stdDeviation="2.2"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#010202"/>
+  <path d="M0 0h330L126 900H0z" fill="#030303"/>
+  <path d="M208 0h152L198 900H102z" fill="url(#leftBeam)" opacity=".78"/>
+  <path d="M324 0h52L218 900h-35z" fill="#000" opacity=".85"/>
+  <path d="M1110-40h62l258 980h-48z" fill="url(#softBeam)" opacity=".65" filter="url(#blur2)"/>
+  <path d="M1170-40h28l286 980h-24z" fill="url(#softBeam)" opacity=".56" filter="url(#blur2)"/>
+  <path d="M1233-40h21l300 980h-22z" fill="url(#softBeam)" opacity=".36" filter="url(#blur2)"/>
+
+  <circle cx="960" cy="590" r="254" fill="none" stroke="#585858" stroke-width="11"/>
+  <circle cx="960" cy="590" r="223" fill="url(#lightDisc)" opacity=".9"/>
+
+  <circle cx="1312" cy="485" r="237" fill="none" stroke="#b7b7b7" stroke-width="9"/>
+  <circle cx="1312" cy="485" r="207" fill="#535353" opacity=".93"/>
+
+  <circle cx="1126" cy="192" r="146" fill="none" stroke="#6f6f6f" stroke-width="10"/>
+  <circle cx="1126" cy="192" r="103" fill="url(#redDisc)"/>
+
+  <path d="M1090 270c114 111 202 235 225 376" fill="none" stroke="#f2f2f2" stroke-width="12" opacity=".9"/>
+  <path d="M1018 307c150 40 252 152 312 268" fill="none" stroke="#f2f2f2" stroke-width="11" opacity=".84"/>
+  <path d="M946 330c118-30 238 7 357 116" fill="none" stroke="#e6e6e6" stroke-width="10" opacity=".75"/>
+</svg>
