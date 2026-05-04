@@ -2,8 +2,11 @@
 theme: ./local-theme
 colorSchema: light
 layout: cover
+institute: Robotics Institute
+course: 41118 AI in robotics
+topic: Introduction to End-to-End Robotics
 title: Introduction to End-to-End Robotics
-author: Raphael Falque
+author: Gibson Hu
 info: |
   Robotics Institute - 41118 AI in Robotics - Introduction to End-to-End Robotics
 drawings:
@@ -15,16 +18,6 @@ addons:
 download: false
 css: style.css
 ---
-
-# Robotics Institute
-
-## 41118 AI in robotics
-
-## Introduction to End-to-End Robotics
-
-<br>
-
-## Raphael Falque
 
 ---
 layout: center
@@ -89,7 +82,7 @@ layout: default
 
 <div class="e2e-visual">
   <div class="sensor-card">
-    <img src="https://diffusion-policy.cs.columbia.edu/images/pusht_ep6_overlay_diffusion.png" alt="Robot pushing a T-shaped block" />
+    <img src="/images/obs.png" alt="Robot pushing a T-shaped block" />
     <span>observation</span>
   </div>
   <div class="network-card">
@@ -121,13 +114,12 @@ What the policy observes:
 ::right::
 
 <div class="video-card">
-  <iframe
-    src="https://www.youtube.com/embed/ZpHapIlJnMo?autoplay=1&mute=1&loop=1&playlist=ZpHapIlJnMo"
-    title="Bimanual manipulator robotics example video"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowfullscreen
-  ></iframe>
+  <video autoplay muted loop playsinline controls>
+    <source src="https://website.pi-asset.com/v2/upload/lowres_processed2xspeed_arx4_website_batch4.mp4" type="video/mp4" />
+  </video>
 </div>
+
+
 
 <div class="caption mt-3">
 End-to-end bimanual control learns to coordinate two arms as one policy for handoff, folding, assembly, and tool use.
@@ -254,7 +246,6 @@ layout: two-cols
 <div class="caption mt-3">
 The key idea is simple: the robot first watches or feels an expert solve the task, then learns to reproduce that sequence.
 </div>
-
 ---
 layout: two-cols
 ---
@@ -293,7 +284,7 @@ layout: two-cols
 
 ::right::
 
-<figure class="online-figure">
+<figure class="online-figure training-figure">
   <img src="https://preview.redd.it/what-is-the-benefit-of-using-tools-such-as-weight-and-v0-s16aecu2mqcg1.png?auto=webp&s=40181e2bf342aeee070758147dc323e6410a7c82" alt="Training dashboard showing loss curves and experiment tracking" />
 </figure>
 
@@ -329,7 +320,7 @@ Deployment means taking the trained model out of the notebook and letting it dri
 layout: default
 ---
 
-# Model Zoo: Different Imitation Learning Policies
+# Different Imitation Learning Policies
 
 <div class="grid-4 compact mt-8">
   <div class="card"><b>Diffusion Policy</b><br/>Starts with noisy actions, then denoises into a smooth plan.</div>
@@ -353,6 +344,7 @@ All of these are Imitation Learning, but they differ in the action representatio
 
 ---
 layout: default
+class: big-heading
 ---
 
 # Diffusion Policy
@@ -426,23 +418,17 @@ layout: two-cols
 
 # Example: Diffusion Policy
 
-**How it works**
-
-```text
-observation history
-→ sample noisy action sequence
-→ repeatedly denoise actions
-→ execute first few actions
-→ replan
-```
-
-- Good at multimodal behavior: there may be several valid ways to solve a task.
-- Predicts action sequences for receding-horizon control.
-- Best fit: precise continuous manipulation.
+- Diffusion Policy is a visuomotor policy that treats robot control as conditional action denoising. Instead of predicting one action directly, it iteratively refines a noisy action sequence into a usable plan. [Project](https://diffusion-policy.cs.columbia.edu/) | [Paper](https://arxiv.org/abs/2303.04137)
+- In the example, the model solves manipulation tasks like Push-T by generating and refining a short trajectory, then executing part of it before replanning. [Demo video](https://diffusion-policy.cs.columbia.edu/videos/pusht_ep6_diffusion.mp4)
+- It is a useful example because diffusion handles multimodal robot behavior well and showed strong results across many benchmark manipulation tasks. [Project page](https://diffusion-policy.cs.columbia.edu/)
 
 ::right::
 
-<div class="video-card">
+<figure class="online-figure vla-teaser-figure mb-4">
+  <img src="https://diffusion-policy.cs.columbia.edu/images/teaser.svg" alt="Diffusion Policy project teaser" />
+</figure>
+
+<div class="video-card vla-teaser-video">
   <video autoplay muted loop playsinline controls>
     <source src="https://diffusion-policy.cs.columbia.edu/videos/pusht_ep6_diffusion.mp4" type="video/mp4" />
   </video>
@@ -452,10 +438,11 @@ observation history
 
 ---
 layout: default
+class: big-heading
 ---
 
 
-# ACT
+# ACT (Action Chucking Transformers)
 
 <div class="act-overview">
   <div>
@@ -504,11 +491,12 @@ Before ACT, transformers were already strong at sequence modeling.
   </div>
 </div>
 
+
 ---
 layout: two-cols
 ---
 
-# ACT: Why Predict Action Chunks?
+# ACT: Temporal Aggregation
 
 Instead of predicting one tiny action at a time, ACT predicts a short future window.
 
@@ -517,19 +505,6 @@ observation now → [a₁, a₂, a₃, ... aₖ]
 ```
 
 This helps long-horizon tasks because the policy commits to a small motion plan, not just the next twitch.
-
-::right::
-
-<figure class="project-figure">
-  <img src="https://dl.acm.org/cms/10.1145/3761668.3761699/asset/9fe907dc-3e4e-4640-847d-2a49fa89f3cc/assets/images/medium/image1.png" alt="ACT action chunking transformer architecture from ALOHA project" />
-  <figcaption>ALOHA / ACT paper figure: images and joints feed a transformer that predicts action chunks.</figcaption>
-</figure>
-
----
-layout: two-cols
----
-
-# ACT: Temporal Aggregation
 
 ACT often predicts overlapping action chunks at every timestep.
 
@@ -542,7 +517,7 @@ Temporal aggregation smooths control and reduces jitter from individual predicti
 ::right::
 
 <figure class="project-figure">
-  <img src="/act-temporal-aggregation.svg" alt="ACT temporal aggregation diagram with overlapping action chunks and weighted ensemble" />
+  <img src="/images/act/temporal-aggregation.svg" alt="ACT temporal aggregation diagram with overlapping action chunks and weighted ensemble" />
   <figcaption>Temporal aggregation combines overlapping action chunk predictions into a smoother command.</figcaption>
 </figure>
 
@@ -553,23 +528,17 @@ layout: two-cols
 
 # Example: ACT
 
-**How it works**
-
-```text
-camera views + joint state
-→ transformer policy
-→ chunk of future actions
-→ temporal aggregation
-→ smoother control
-```
-
-- Learns from teleoperated demonstrations.
-- Chunking shortens the effective decision horizon.
-- Best fit: low-cost arms and bimanual manipulation.
+- ACT is the policy introduced with the ALOHA system for fine-grained bimanual manipulation. It uses a transformer to predict short chunks of future robot actions from multi-camera observations and joint state. [Project](https://tonyzhaozh.github.io/aloha/) | [Paper](https://arxiv.org/abs/2304.13705)
+- In the ACT example, the robot uses teleoperated demonstrations to learn coordinated two-arm behaviors such as opening lids and handling objects in contact-rich settings. [Demo video](https://tonyzhaozh.github.io/aloha/resources/open_lid.mp4)
+- It is a useful example because it shows that end-to-end imitation learning can work on low-cost hardware with relatively small amounts of task-specific data. [Project page](https://tonyzhaozh.github.io/aloha/)
 
 ::right::
 
-<div class="video-card">
+<figure class="online-figure vla-teaser-figure mb-4">
+  <img src="https://tonyzhaozh.github.io/aloha/resources/algo.png" alt="ACT architecture overview" />
+</figure>
+
+<div class="video-card vla-teaser-video">
   <video autoplay muted loop playsinline controls>
     <source src="https://tonyzhaozh.github.io/aloha/resources/open_lid.mp4" type="video/mp4" />
   </video>
@@ -579,6 +548,7 @@ camera views + joint state
 
 ---
 layout: two-cols
+class: big-heading
 ---
 
 # VLA Models
@@ -618,16 +588,16 @@ VLAs come from the same family as vision-language and language models.
 
 <div class="origin-grid">
   <div>
-    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20250716155352599331/the_structure_of_a_vlm.webp" alt="Chatbots: Vision-language models" />
-    <span>Vision and Language: token sequence over time using different modalities </span>
+    <img src="/images/VLM_example.png" alt="Chatbots: Vision-language models" />
+    <span>Using Images/Videos in VLM ChatBots </span>
   </div>
   <div>
     <div class="video-card">
       <video autoplay muted loop playsinline controls>
-        <source src="https://mobile-aloha.github.io/resources/mobile-aloha.mp4" type="video/mp4" />
+        <source src="https://openvla.github.io/static/videos/comparisons_with_baselines/rt1_robot/rt2x--move_coke_can_near_taylor_swift.mp4" type="video/mp4" />
       </video>
     </div>
-    <span>Robot control: action sequence over time</span>
+    <span>Model can take Language and Vision to predict Robot actions.    (Give the coke to Tailor Swift)</span>
   </div>
 </div>
 
@@ -635,39 +605,6 @@ VLAs come from the same family as vision-language and language models.
   <div><b>Vision-language models</b><span>image + text → text</span></div>
   <div><b>VLA models</b><span>image + text + state → action</span></div>
 </div> -->
-
----
-layout: two-cols
----
-
-# Example: VLA Models
-
-**How they work**
-
-```text
-camera image
-+ language instruction
-+ robot state
-→ vision-language-action model
-→ robot action tokens
-```
-
-- RT-2 adapts vision-language models so action can be represented like tokens.
-- OpenVLA is an open 7B VLA trained on large robot datasets.
-- Best fit: broad language-conditioned manipulation.
-
-::right::
-
-<figure class="online-figure small mb-4">
-  <img src="https://openvla.github.io/static/images/openvla_model.jpg" alt="OpenVLA model architecture" />
-</figure>
-
-<a class="video-popup-card" href="https://openvla.github.io/static/videos/openvla_teaser_video.mp4" onclick="window.open(this.href, 'openvlaVideo', 'width=1040,height=640,noopener,noreferrer'); return false;">
-  <img src="https://openvla.github.io/static/images/openvla_teaser.jpg" alt="OpenVLA video preview" />
-  <span>Open project video</span>
-</a>
-
-<div class="caption">OpenVLA project video: image + instruction → action.</div>
 
 ---
 layout: two-cols
@@ -693,6 +630,8 @@ Key idea: the model can use language reasoning and visual features before choosi
   <figcaption>OpenVLA project figure: image and instruction tokens are decoded into robot actions.</figcaption>
 </figure>
 
+
+
 ---
 layout: two-cols
 ---
@@ -714,15 +653,76 @@ layout: two-cols
 ::right::
 
 <div class="project-grid">
-  <figure><img src="https://openvla.github.io/static/images/visual_matching.png" alt="OpenVLA visual matching result figure" /><figcaption>Visual matching</figcaption></figure>
-  <figure><img src="https://openvla.github.io/static/images/control_gap.png" alt="OpenVLA control gap figure" /><figcaption>Control gap</figcaption></figure>
+  <div>
+    <video autoplay muted loop playsinline controls>
+      <source src="https://openvla.github.io/static/videos/qualitative_results/correct_target/openvla--put_eggplant_into_pot--clutter.mp4" type="video/mp4" />
+    </video>
+    <span>Put Eggplant into Pot</span>
+  </div>
+  <div>
+    <video autoplay muted loop playsinline controls>
+      <source src="https://openvla.github.io/static/videos/qualitative_results/correct_target/openvla--put_corn_on_plate--clutter.mp4" type="video/mp4" />
+    </video>
+    <span>Put Yellow Corn on Pink Plate</span>
+  </div>
+  <div>
+    <video autoplay muted loop playsinline controls>
+      <source src="https://openvla.github.io/static/videos/qualitative_results/good_lang_cond/openvla--lift_red_chili_pepper.mp4" type="video/mp4" />
+    </video>
+    <span>Lift Red Chili Pepper</span>
+  </div>
+
+  <div>
+    <video autoplay muted loop playsinline controls>
+      <source src="https://openvla.github.io/static/videos/qualitative_results/good_lang_cond/openvla--lift_cheese.mp4" type="video/mp4" />
+    </video>
+    <span>Lift Cheese</span>
+  </div>
+  <div>
+    <video autoplay muted loop playsinline controls>
+      <source src="https://openvla.github.io/static/videos/qualitative_results/good_lang_cond/openvla--put_pink_cup_on_plate.mp4" type="video/mp4" />
+    </video>
+    <span>Put Pink Cup on Plate</span>
+  </div>
+  <div>
+    <video autoplay muted loop playsinline controls>
+      <source src="https://openvla.github.io/static/videos/qualitative_results/good_lang_cond/openvla--put_blue_cup_on_plate.mp4" type="video/mp4" />
+    </video>
+    <span>Put Blue Cup on Plate</span>
+  </div>
 </div>
 
 ---
 layout: two-cols
 ---
 
-# Generalist Policies / Octo
+# Example: VLA Models
+
+
+- OpenVLA is an open-source 7B vision-language-action model trained on 970k robot episodes from Open X-Embodiment. It takes an image plus a language instruction and predicts robot actions. [Project](https://openvla.github.io/) | [Paper](https://arxiv.org/abs/2406.09246)
+- In the OpenVLA example, the model maps commands like object placement or lifting tasks directly into robot control from visual input. [Teaser video](https://openvla.github.io/static/videos/openvla_teaser_video.mp4)
+- It is a useful VLA example because the code, model weights, and training pipeline are all public. [GitHub](https://github.com/openvla/openvla) | [Hugging Face model](https://huggingface.co/openvla/openvla-7b)
+
+::right::
+
+<figure class="online-figure vla-teaser-figure mb-4">
+  <img src="https://openvla.github.io/static/images/openvla_teaser.jpg" alt="OpenVLA model architecture" />
+</figure>
+
+<div class="video-card vla-teaser-video">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://openvla.github.io/static/videos/openvla_teaser_video.mp4" type="video/mp4" />
+  </video>
+</div>
+
+<div class="caption">OpenVLA project video: image + instruction → action.</div>
+
+---
+layout: two-cols
+class: big-heading
+---
+
+# Generalist Policies 
 
 Generalist robot policies aim to train once on many tasks, robots, and datasets, then adapt to a new setup.
 
@@ -753,43 +753,55 @@ In robotics, the challenge is harder because datasets come from different robots
 
 ::right::
 
+
 <div class="origin-grid">
-  <div><b>Foundation models</b><span>pretrain broadly, adapt later</span></div>
-  <div><b>Generalist robotics</b><span>multi-robot pretraining, task-specific adaptation</span></div>
+  <div>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKcoksYoCdX7airb81ZBmNUiht-0oaRSq2ww&s" alt="Diffusion image generation process from noise to image" />
+    <span>Models trained on various modalities and able to output at various modalities</span>
+  </div>
+  <div>
+    <div class="video-card">
+      <video autoplay muted loop playsinline controls>
+        <source src="https://generalistai.com/assets/videos/homepage/gen1-teaser.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <span>One robot models can learn from any type of data to perform generalist tasks</span>
+  </div>
 </div>
 
 ---
 layout: two-cols
 ---
 
-# Example: Octo
+# Learning from Everything
 
-**How it works**
 
-```text
-large multi-robot dataset
-→ pretrained generalist policy
-→ language or goal image
-→ diffusion-decoded actions
-→ optional fine-tuning
-```
+- Mixes demonstrations from many robots, cameras, tasks, and environments.
+- Standardizes each episode into observations, goals, robot state, and actions.
+- Learns reusable manipulation patterns from broad robot experience.
+- Uses language or goal images to condition the policy.
+- Predicts short action sequences, then replans as the scene changes.
+- Adapts to new tasks with much less data than training from scratch.
 
-- Pretrained on many robot episodes from Open X-Embodiment.
+
+<!-- - Pretrained on many robot episodes from Open X-Embodiment.
 - Supports flexible cameras, robot states, and action spaces.
-- Best fit: start from a capable policy, then adapt.
+- Start from a capable policy, then adapt.
+ -->
 
 ::right::
 
-<figure class="online-figure small mb-4">
+<div class="origin-grid origin-grid-tall">
+<figure class="online-figure octo-architecture-figure mb-4">
   <img src="https://octo-models.github.io/architecture.jpg" alt="Octo architecture diagram" />
 </figure>
 
-<div class="project-link-card">
-  <img src="https://octo-models.github.io/teaser.jpg" alt="Octo project teaser" />
-  <a href="https://octo-models.github.io/" onclick="window.open(this.href, 'octoProject', 'width=1040,height=720,noopener,noreferrer'); return false;">Open Octo project page</a>
+<figure class="online-figure octo-architecture-figure mb-4">
+  <img src="https://octo-models.github.io/sampling_weights.jpg" alt="Octo sampling weights figure" />
+</figure>
 </div>
 
-<div class="caption">Octo project page: generalist policy results across robot setups.</div>
+
 
 ---
 layout: default
@@ -802,34 +814,44 @@ layout: default
     <tr>
       <th>Model family</th>
       <th>Input</th>
+      <th>Training data</th>
       <th>Action style</th>
-      <th>Why use it?</th>
+      <th>Advantages</th>
+      <th>Limitations</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>Diffusion Policy</td>
       <td>Images + state history</td>
+      <td>Task demonstrations from one robot setup</td>
       <td>Denoised action sequence</td>
-      <td>Smooth continuous control</td>
+      <td>Smooth continuous control; handles multiple valid futures</td>
+      <td>Can be slower at inference; needs strong demonstration data</td>
     </tr>
     <tr>
       <td>ACT</td>
       <td>Multi-camera images + joints</td>
+      <td>Teleoperated demonstrations</td>
       <td>Action chunks</td>
-      <td>Data-efficient imitation</td>
+      <td>Data-efficient imitation; good for precise bimanual tasks</td>
+      <td>Often specialized to one setup; less language reasoning</td>
     </tr>
     <tr>
-      <td>VLA / RT-2 / OpenVLA</td>
+      <td>VLA</td>
       <td>Image + language + state</td>
+      <td>Vision-language data plus robot episodes</td>
       <td>Action tokens</td>
-      <td>Language reasoning and generalization</td>
+      <td>Strong language grounding; can reuse vision-language pretraining</td>
+      <td>Large models are expensive; robot action grounding is hard</td>
     </tr>
     <tr>
-      <td>Octo</td>
+      <td>Foundation Models</td>
       <td>Language or goal image + observations</td>
+      <td>Mixed datasets across robots and tasks</td>
       <td>Diffusion-decoded actions</td>
-      <td>Pretrain once, fine-tune broadly</td>
+      <td>Pretrain once, adapt broadly across tasks and robots</td>
+      <td>Needs diverse datasets; embodiment differences are difficult</td>
     </tr>
   </tbody>
 </table>
@@ -839,6 +861,13 @@ layout: default
 ---
 
 # Why End-to-End Robotics is Exciting
+
+- Turns robot behavior into a learning problem instead of a hand-designed pipeline.
+- Lets demonstrations become direct supervision for perception and control.
+- Makes language and vision natural inputs for specifying tasks.
+- Allows one model family to cover many skills, robots, and environments.
+- Gets better as datasets, compute, and foundation models improve.
+
 
 <div class="benefit-wheel">
   <div>Less manual engineering</div>
@@ -872,55 +901,150 @@ layout: default
 layout: two-cols
 ---
 
-# Sim-to-Real Transfer
+# Solution: Scale Better Data
 
-Robots often train in simulation before running in the real world.
+Robots need more diverse experience before they can generalize.
 
-```mermaid
-flowchart LR
-  A[Simulation] --> B[Policy Training]
-  B --> C[Real Robot]
-  C --> D[Reality Gap]
-```
+- Pool demonstrations across robots, labs, tasks, and environments.
+- Convert each dataset into a shared format for observations, goals, states, and actions.
+- Pretrain policies on broad robot experience before adapting to a specific setup.
 
-The challenge: simulated physics and real physics are never exactly the same.
+Example: [OpenX Embodiment, DROID](https://github.com/google-deepmind/open_x_embodiment)
 
 ::right::
 
-<figure class="project-figure">
-  <img src="https://openvla.github.io/static/images/control_gap.png" alt="OpenVLA control gap figure comparing control behavior" />
-  <figcaption>OpenVLA project figure: control mismatch is one practical sim-to-real problem.</figcaption>
+<div class="origin-grid origin-grid-tall">
+<figure class="online-figure octo-architecture-figure mb-4">
+    <img src="https://github.com/google-deepmind/open_x_embodiment/raw/main/imgs/teaser.png" alt="Chatbots: Vision-language models" />
+      <figcaption>1 Million Episodes</figcaption>
 </figure>
 
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://droid-dataset.github.io/videos/dataset-visualizer.mp4" type="video/mp4" />
+  </video>
+</div>
+
+</div>
+
+
+
+
 ---
-layout: default
+layout: two-cols
 ---
 
-# Videos and References
+# Solution: Collect Cheaper Demos
 
-<div class="refs-grid">
+High-quality robot data is expensive, so the collection process matters.
+
+- Use low-cost teleoperation systems to make demonstrations easier to gather.
+- Let humans provide corrective examples for hard edge cases.
+- Focus data collection on tasks where real contact and dexterity matter.
+
+Example: [Mobile ALOHA](https://mobile-aloha.github.io/)
+
+::right::
+
+
+<div class="origin-grid origin-grid-tall">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://umi-gripper.github.io//videos/in_the_wild_cup_data_overview.mp4" type="video/mp4" />
+  </video>
+</div>  
+
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://umi-gripper.github.io//videos/in_the_wild_cup_data_collection.mp4" type="video/mp4" />
+  </video>
+</div>
+</div>
+
+<!-- <div class="origin-grid origin-grid-tall">
+<figure class="online-figure octo-architecture-figure mb-4">
+    <img src="/images/memo.png" alt="Chatbots: Vision-language models" />
+</figure>
+
+<!-- <div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://v.redd.it/0nw0ml4yvd2g1/HLSPlaylist.m3u8?f=hd%2CsubsAll%2ChlsSpecOrder&v=1&a=1780468313%2CODBlMzY0ODU2NGI2YzI5NWM2MTk0NWM0ZTQ3M2Y2MjU2MzI0ZDE0MzdjZDg3NzBjZTQ3YzA1MWNmZWVlZDMwNg%3D%3D" type="video/mp4" />
+  </video>
+</div>  -->
+
+<!-- </div> -->
+---
+layout: two-cols
+---
+
+# Solution: Train With Variation
+
+Policies fail when deployment looks different from training.
+
+- Train in many simulated versions of the task, not one fixed scene.
+- Randomize appearance and layout so the policy learns the task, not the background.
+- Combine real demonstrations with synthetic trajectories.
+- Use parallel simulation to test many conditions before hardware deployment.
+- Reduce the sim-to-real gap by exposing the model to messy variation early.
+
+
+Example: [NVIDIA Isaac Sim](https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Isaac-GR00T-N1--the-Worlds-First-Open-Humanoid-Robot-Foundation-Model--and-Simulation-Frameworks-to-Speed-Robot-Development/default.aspx)
+
+::right::
+
+
+<div class="origin-grid origin-grid-tall">
   <div>
-    <b>Project Media</b>
-    <a href="https://openvla.github.io/static/videos/openvla_teaser_video.mp4" onclick="window.open(this.href, 'openvlaVideo', 'width=1040,height=640,noopener,noreferrer'); return false;">OpenVLA project video</a>
-    <a href="https://diffusion-policy.cs.columbia.edu/videos/pusht_ep6_diffusion.mp4" onclick="window.open(this.href, 'diffusionPolicyVideo', 'width=1040,height=640,noopener,noreferrer'); return false;">Diffusion Policy Push-T video</a>
-    <a href="https://tonyzhaozh.github.io/aloha/resources/open_lid.mp4" onclick="window.open(this.href, 'actVideo', 'width=1040,height=640,noopener,noreferrer'); return false;">ALOHA / ACT task video</a>
-    <a href="https://octo-models.github.io/" onclick="window.open(this.href, 'octoProject', 'width=1040,height=720,noopener,noreferrer'); return false;">Octo project results</a>
+    <img src="https://developer-blogs.nvidia.com/wp-content/uploads/2025/01/isaac-teleoperation.gif" alt="Diffusion image generation process from noise to image" />
   </div>
   <div>
-    <b>Project Pages</b>
-    <a href="https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/">RT-2</a>
-    <a href="https://openvla.github.io/">OpenVLA</a>
-    <a href="https://diffusion-policy.cs.columbia.edu/">Diffusion Policy</a>
-    <a href="https://tonyzhaozh.github.io/aloha/">ALOHA / ACT</a>
-    <a href="https://octo-models.github.io/">Octo</a>
-  </div>
-  <div>
-    <b>Docs and Images</b>
-    <a href="https://huggingface.co/docs/lerobot/en/act">LeRobot ACT docs</a>
-    <a href="https://commons.wikimedia.org/wiki/File:UR16e_robot_arm.png">Wikimedia cobot image</a>
-    <a href="https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/">RT-2 images and explainer</a>
+    <div class="video-card">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/8Mwrfvq-GeY?si=UvAn1KmT6SkrO9BV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
   </div>
 </div>
+
+
+
+
+
+
+---
+layout: two-cols
+---
+
+# Solution: Deploy Cautiously
+
+Learning-based policies still need guardrails in the real world.
+
+
+- Deploy to learn what works on real hardware, not only in datasets.
+- Use real failures to improve data collection and model training.
+- Target useful tasks where hand-written pipelines struggle with variation.
+- Start with constrained settings because physical mistakes are costly.
+- Expand autonomy only after testing safety, reliability, and recovery.
+
+
+
+Example: [Ultra robotics](https://www.ultra.tech/)
+
+::right::
+
+
+<div class="origin-grid origin-grid-tall">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://packaged-media.redd.it/706tmy4j0yxg1/pb/m2-res_468p.mp4?m=DASHPlaylist.mpd&var=sgpssan&v=1&e=1777896000&s=c30dc8010cded3274c4a4ab237fc6850ee2ed122" type="video/mp4" />
+  </video>
+</div>  
+
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="/videos/end2end.mp4" type="video/mp4" />
+  </video>
+</div>
+</div>
+
 
 ---
 layout: two-cols
@@ -928,21 +1052,35 @@ layout: two-cols
 
 # How Do We Evaluate a Robot?
 
-- Task success rate
-- Safety and collision rate
-- Generalization to new objects
-- Generalization to new environments
-- Data efficiency
-- Human interpretability
+- Task Success: Did the robot complete the goal in the real world?
+- Robustness: Does it still work when lighting, object positions, camera views, or backgrounds change?
+- Recovery: Can it correct mistakes, retry a grasp, or continue after a small failure?
+- Safety: Does it avoid collisions, excessive force, unstable motions, or risky behavior near people?
+- Efficiency: How long does the task take, and how many actions or retries are needed?
+- Generalization: Does the policy work on new objects, new rooms, or new task instructions?
+- Reliability: What is the success rate over many repeated trials, not just one demo?
 
 ::right::
+
+<div class="origin-grid ">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://packaged-media.redd.it/zrysycrr7uvg1/pb/m2-res_720p.mp4?m=DASHPlaylist.mpd&var=sgpssan&v=1&e=1777896000&s=4220f0cbddf83831c594998752ffa561780b19a2" type="video/mp4" />
+  </video>
+</div>  
+
+</div>
+
+
+<!-- ::right::
 
 <div class="eval-board">
   <div><b>92%</b><span>success</span></div>
   <div><b>0</b><span>collisions</span></div>
   <div><b>5</b><span>new objects</span></div>
   <div><b>10</b><span>demos</span></div>
-</div>
+</div> -->
+
 
 ---
 layout: center
@@ -952,8 +1090,139 @@ class: text-center
 # Key Takeaway
 
 <div class="big-quote">
-End-to-end robotics learns a direct path from perception to action, but real-world safety and generalization remain major challenges.
+End-to-end robotics learns a direct path from perception to action compared to tradition human engineered solutions, but scaling data, real-world safety and generalization remain major challenges.
 </div>
+
+
+---
+layout: center
+class: text-center
+---
+
+# Companies at the Forefront
+
+<div class="big-quote">
+There are many companies trying to push for commercial deployment of these solutions already. This was unheard of only a few years ago.
+</div>
+
+---
+layout: center
+class: text-center
+---
+
+
+
+# Ultra Robotics
+
+<div class="origin-grid ">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://ultratech.b-cdn.net/OPTIMIZED%20FOR%20PERFORMANCE%20AND%20SAFETY%20V2.mp4" type="video/mp4" />
+  </video>
+</div>  
+
+</div>
+
+
+---
+layout: center
+class: text-center
+---
+
+# Figure AI
+
+<div class="origin-grid ">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="/videos/figure.mp4" type="video/mp4" />
+  </video>
+</div>  
+</div>
+
+
+---
+layout: center
+class: text-center
+---
+
+# Reflex Roboitcs/
+
+<div class="origin-grid ">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://cdn.prod.website-files.com/6822b858ead5da1d444f23a3/6822b858ead5da1d444f23fd_0316%20(1)(11)-transcode.mp4" type="video/mp4" />
+  </video>
+</div>  
+</div>
+
+
+
+---
+layout: center
+class: text-center
+---
+
+# Sunday Robotics/
+
+<div class="origin-grid ">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="/videos/sunday.mp4" type="video/mp4" />
+  </video>
+</div>  
+</div>
+
+
+---
+layout: center
+class: text-center
+---
+
+# Physical Intelligence /
+
+<div class="origin-grid ">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://website.pi-asset.com/pi06star/cafe_100x.mp4" type="video/mp4" />
+  </video>
+</div>  
+</div>
+
+
+---
+layout: center
+class: text-center
+---
+
+# Generalist /
+
+<div class="origin-grid ">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://generalistai.com/blog/apr-02-2026-GEN-1/assets/generalist-gen1-box-folding-200.mp4" type="video/mp4" />
+  </video>
+</div>  
+</div>
+
+
+---
+layout: center
+class: text-center
+---
+
+# Sklid AI /
+
+<div class="origin-grid ">
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+   <source src="https://dtkk46np7h1p6.cloudfront.net/videos/Long-Form-Clip2.mp4" type="video/mp4" />
+  </video>
+</div>  
+</div>
+
+
+
+
 
 ---
 layout: center
@@ -967,22 +1236,12 @@ Would you trust an end-to-end robot in a home, hospital, or factory?
 <div class="mt-14 opacity-70">What would it need to prove first?</div>
 
 ---
-layout: two-cols
+layout: default
 ---
 
-# Reinforcement Learning
+# Reinforcement Learning, A While New Shift In Robot Control
 
-The robot learns by trying actions and receiving rewards.
 
-```text
-try action → observe result → receive reward → improve policy
-```
-
-Powerful, but real robots make exploration expensive, slow, and sometimes unsafe.
-
-::right::
-
-<div class="reward-loop">
-  <div class="world"></div>
-  <div class="loop-arrow">try → reward → improve</div>
+<div class="video-card">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/srPz8TRpZ_8?si=uXoyDOH3ufTbcJvY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
