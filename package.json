@@ -12,6 +12,8 @@
     "@slidev/cli": "latest",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
+    "markdown-it": "^14.1.1",
+    "slidev-addon-tikzjax": "^0.1.0",
     "vue": "latest"
   },
   "devDependencies": {

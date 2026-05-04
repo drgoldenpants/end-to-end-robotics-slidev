@@ -1,31 +1,30 @@
 ---
-theme: seriph
+theme: ./local-theme
+colorSchema: light
+layout: cover
 title: Introduction to End-to-End Robotics
+author: Raphael Falque
 info: |
-  A beginner-friendly introduction to end-to-end robotics: learning robot behavior directly from data.
-class: text-center
-highlighter: shiki
+  Robotics Institute - 41118 AI in Robotics - Introduction to End-to-End Robotics
 drawings:
   persist: false
-transition: slide-left
 mdc: true
+duration: 60min
+addons:
+  - tikzjax
+download: false
 css: style.css
 ---
-layout: cover
-class: title-card
----
 
-<div class="uts-mark">
-  <div>UTS</div>
-  <div class="uts-symbol">AI</div>
-</div>
+# Robotics Institute
 
-<div class="title-copy">
-  <h1>Robotics Institute</h1>
-  <h2>41118 AI in Robotics</h2>
-  <h3>Introduction to End-to-End Robotics</h3>
-  <p>Learning robot behavior directly from data</p>
-</div>
+## 41118 AI in robotics
+
+## Introduction to End-to-End Robotics
+
+<br>
+
+## Raphael Falque
 
 ---
 layout: center
@@ -416,7 +415,7 @@ Diffusion policies can represent several possible futures before settling on one
 
 ::right::
 
-<figure class="project-figure">
+<figure class="project-figure ">
   <img src="https://diffusion-policy.cs.columbia.edu/images/multimodal_sim.svg" alt="Diffusion Policy multimodal behavior figure" />
   <figcaption>Project figure: diffusion can model multiple valid action modes.</figcaption>
 </figure>
@@ -452,23 +451,29 @@ observation history
 <div class="caption">Diffusion Policy project video: denoise a Push-T action sequence.</div>
 
 ---
-layout: two-cols
+layout: default
 ---
+
 
 # ACT
 
-ACT stands for Action Chunking Transformer.
+<div class="act-overview">
+  <div>
+    Core idea: instead of predicting one action directly, the policy generates a short action sequence by denoising it step by step.
 
-- It predicts a chunk of future actions, not just the next control step.
-- It is trained from demonstrations, often teleoperated ones.
-- It works especially well for long, precise manipulation sequences.
+    - It predicts a chunk of future actions, not just the next control step.
+    - It is trained from demonstrations, often teleoperated ones.
+    - It works especially well for long, precise manipulation sequences.
 
-::right::
+  </div>
 
-<figure class="project-figure">
-  <img src="https://tonyzhaozh.github.io/aloha/resources/algo.png" alt="ACT architecture overview" />
-  <figcaption>ACT predicts short windows of future actions from multi-camera robot observations.</figcaption>
-</figure>
+  
+  <figure class="project-figure">
+    <img src="https://tonyzhaozh.github.io/aloha/resources/algo.png" alt="ACT architecture overview" />
+    <figcaption>ACT predicts short windows of future actions from multi-camera robot observations.</figcaption>
+  </figure>
+
+</div>
 
 ---
 layout: two-cols
@@ -485,9 +490,62 @@ Before ACT, transformers were already strong at sequence modeling.
 ::right::
 
 <div class="origin-grid">
-  <div><b>Language</b><span>token sequence over time</span></div>
-  <div><b>Robot control</b><span>action sequence over time</span></div>
+  <div>
+    <img src="https://images.ctfassets.net/kftzwdyauwt9/7LzxdzMcijUYHtIES6rmub/1dd3bc9f423a6b1cd5176936dbb029aa/Entry_Point.png?w=3840&q=90&fm=webp" alt="Diffusion image generation process from noise to image" />
+    <span>Language: token sequence over time</span>
+  </div>
+  <div>
+    <div class="video-card">
+      <video autoplay muted loop playsinline controls>
+        <source src="https://mobile-aloha.github.io/resources/mobile-aloha.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <span>Robot control: action sequence over time</span>
+  </div>
 </div>
+
+---
+layout: two-cols
+---
+
+# ACT: Why Predict Action Chunks?
+
+Instead of predicting one tiny action at a time, ACT predicts a short future window.
+
+```text
+observation now → [a₁, a₂, a₃, ... aₖ]
+```
+
+This helps long-horizon tasks because the policy commits to a small motion plan, not just the next twitch.
+
+::right::
+
+<figure class="project-figure">
+  <img src="https://dl.acm.org/cms/10.1145/3761668.3761699/asset/9fe907dc-3e4e-4640-847d-2a49fa89f3cc/assets/images/medium/image1.png" alt="ACT action chunking transformer architecture from ALOHA project" />
+  <figcaption>ALOHA / ACT paper figure: images and joints feed a transformer that predicts action chunks.</figcaption>
+</figure>
+
+---
+layout: two-cols
+---
+
+# ACT: Temporal Aggregation
+
+ACT often predicts overlapping action chunks at every timestep.
+
+Multiple predictions vote on what the robot should do now.
+
+<div class="note mt-6">
+Temporal aggregation smooths control and reduces jitter from individual predictions.
+</div>
+
+::right::
+
+<figure class="project-figure">
+  <img src="/act-temporal-aggregation.svg" alt="ACT temporal aggregation diagram with overlapping action chunks and weighted ensemble" />
+  <figcaption>Temporal aggregation combines overlapping action chunk predictions into a smoother command.</figcaption>
+</figure>
+
 
 ---
 layout: two-cols
@@ -511,78 +569,13 @@ camera views + joint state
 
 ::right::
 
-<figure class="online-figure small mb-4">
-  <img src="https://tonyzhaozh.github.io/aloha/resources/algo.png" alt="ACT action chunking architecture" />
-</figure>
-
-<a class="video-popup-card" href="https://tonyzhaozh.github.io/aloha/resources/open_lid.mp4" onclick="window.open(this.href, 'actVideo', 'width=1040,height=640,noopener,noreferrer'); return false;">
-  <img src="https://tonyzhaozh.github.io/aloha/resources/algo.png" alt="ACT video preview" />
-  <span>Open project video</span>
-</a>
-
-<div class="caption">ALOHA / ACT project video: bimanual task execution.</div>
-
----
-layout: two-cols
----
-
-# ACT: Why Predict Action Chunks?
-
-Instead of predicting one tiny action at a time, ACT predicts a short future window.
-
-```text
-observation now → [a₁, a₂, a₃, ... aₖ]
-```
-
-This helps long-horizon tasks because the policy commits to a small motion plan, not just the next twitch.
-
-::right::
-
-<figure class="project-figure">
-  <img src="https://tonyzhaozh.github.io/aloha/resources/algo.png" alt="ACT action chunking transformer architecture from ALOHA project" />
-  <figcaption>ALOHA / ACT paper figure: images and joints feed a transformer that predicts action chunks.</figcaption>
-</figure>
-
----
-layout: two-cols
----
-
-# ACT: Temporal Aggregation
-
-ACT often predicts overlapping action chunks at every timestep.
-
-Multiple predictions vote on what the robot should do now.
-
-<div class="note mt-6">
-Temporal aggregation smooths control and reduces jitter from individual predictions.
+<div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://tonyzhaozh.github.io/aloha/resources/open_lid.mp4" type="video/mp4" />
+  </video>
 </div>
 
-::right::
-
-<figure class="project-figure">
-  <img src="https://tonyzhaozh.github.io/aloha/resources/algo.png" alt="ACT architecture with temporal action sequence prediction" />
-  <figcaption>The ACT diagram shows action chunks; overlapping chunks can be aggregated over time.</figcaption>
-</figure>
-
----
-layout: two-cols
----
-
-# ACT: Why It Worked for ALOHA
-
-ACT pairs well with teleoperation datasets:
-
-- Human demos provide complete behavior.
-- Transformers handle multi-camera observations.
-- Action chunks make contact-rich bimanual tasks smoother.
-- A compact policy can run on relatively low-cost hardware.
-
-::right::
-
-<a class="video-popup-card" href="https://tonyzhaozh.github.io/aloha/resources/teleop_all.mp4" onclick="window.open(this.href, 'alohaTeleopVideo', 'width=1040,height=640,noopener,noreferrer'); return false;">
-  <img src="https://tonyzhaozh.github.io/aloha/resources/algo.png" alt="ALOHA teleoperation and ACT project preview" />
-  <span>Open teleoperation video</span>
-</a>
+<div class="caption">ALOHA / ACT project video: bimanual task execution.</div>
 
 ---
 layout: two-cols
@@ -624,9 +617,24 @@ VLAs come from the same family as vision-language and language models.
 ::right::
 
 <div class="origin-grid">
+  <div>
+    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20250716155352599331/the_structure_of_a_vlm.webp" alt="Chatbots: Vision-language models" />
+    <span>Vision and Language: token sequence over time using different modalities </span>
+  </div>
+  <div>
+    <div class="video-card">
+      <video autoplay muted loop playsinline controls>
+        <source src="https://mobile-aloha.github.io/resources/mobile-aloha.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <span>Robot control: action sequence over time</span>
+  </div>
+</div>
+
+<!-- <div class="origin-grid">
   <div><b>Vision-language models</b><span>image + text → text</span></div>
   <div><b>VLA models</b><span>image + text + state → action</span></div>
-</div>
+</div> -->
 
 ---
 layout: two-cols

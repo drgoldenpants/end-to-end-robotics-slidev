@@ -993,12 +993,24 @@ h1 {
   padding: .55rem;
 }
 
+.multimodal-gap-figure {
+  margin-left: 20rem;
+}
+
 .diffusion-policy-overview {
-  display: grid;
-  grid-template-columns: .9fr 1.15fr;
-  gap: 1.5rem;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  align-items: stretch;
   margin-top: 1rem;
+}
+
+.diffusion-policy-overview > div {
+  max-width: 48rem;
+}
+
+.diffusion-policy-overview figure {
+  margin: 0;
 }
 
 .diffusion-policy-figure img {
