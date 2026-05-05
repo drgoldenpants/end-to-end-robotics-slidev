@@ -68,6 +68,7 @@ layout: default
   <div><span>Search</span><b>Planning</b></div>
   <div><span>Servo</span><b>Control</b></div>
   <div><span>Move</span><b>Action</b></div>
+  <img class="pipeline-hover-image" src="https://rewindgravity.com/wp-content/uploads/2017/06/SpaghettiCode.jpg" alt="Spaghetti code representing a complex traditional robotics pipeline" />
 </div>
 
 <div class="note mt-8">
@@ -93,9 +94,31 @@ layout: default
     <b>Δx, Δθ, gripper</b>
     <span>next action sequence</span>
   </div>
+  <img class="pipeline-hover-image" src="/images/bigbrain.jpg" alt="Large neural network brain illustration" />
 </div>
 
 <div class="big-formula mt-8">observation + goal → neural network → action</div>
+
+---
+layout: default
+---
+
+# Why End-to-End Robotics is Exciting
+
+- Turns robot behavior into a learning problem instead of a hand-designed pipeline.
+- Lets demonstrations become direct supervision for perception and control.
+- Makes language and vision natural inputs for specifying tasks.
+- Allows one model family to cover many skills, robots, and environments.
+- Gets better as datasets, compute, and foundation models improve.
+
+
+<div class="benefit-wheel">
+  <div>Less manual engineering</div>
+  <div>Learns from data</div>
+  <div>Uses foundation models</div>
+  <div>Handles visual complexity</div>
+  <div>Generalizes across tasks</div>
+</div>
 
 ---
 layout: two-cols
@@ -125,7 +148,6 @@ What the policy observes:
 End-to-end bimanual control learns to coordinate two arms as one policy for handoff, folding, assembly, and tool use.
 </div>
 
-Outputs can include synchronized reaches, two-handed grasps, force-aware repositioning, and smooth handover motions.
 
 ---
 layout: two-cols
@@ -143,20 +165,17 @@ What the policy observes:
 
 ::right::
 
+<div class="origin-grid ">
 <div class="video-card">
-  <iframe
-    src="https://www.youtube.com/embed/HYwekersccY"
-    title="Humanoid robotics example video"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowfullscreen
-  ></iframe>
+  <video autoplay muted loop playsinline controls>
+    <source src="/videos/bostondynamics.mp4" type="video/mp4" />
+  </video>
+</div>  
 </div>
 
 <div class="caption mt-3">
 Humanoid end-to-end robotics maps perception, balance, and task context directly into whole-body actions.
 </div>
-
-Outputs can include walking, reaching, grasping, gaze, and recovery motions as one coordinated policy.
 
 ---
 layout: default
@@ -165,22 +184,7 @@ layout: default
 # Example Task: Pick Up a Cup
 
 <div class="cup-task-visual" aria-label="Robot arm observing and reaching for a cup">
-  <div class="robot-arm">
-    <span class="joint shoulder"></span>
-    <span class="link upper"></span>
-    <span class="joint elbow"></span>
-    <span class="link forearm"></span>
-    <span class="gripper"></span>
-  </div>
-  <div class="tabletop">
-    <span class="cup"></span>
-    <span class="block red"></span>
-    <span class="block blue"></span>
-  </div>
-  <div class="vision-box">
-    <span>camera view</span>
-  </div>
-  <div class="action-path"></div>
+    <img src="/images/pickcup.png" alt="ACT temporal aggregation diagram with overlapping action chunks and weighted ensemble" />
 </div>
 
 <div class="sequence">
@@ -194,12 +198,17 @@ layout: default
 layout: default
 ---
 
-# Main Learning Approaches
+# Two Popular Learning Approaches
 
-<div class="grid-3 visual-cards mt-8">
-  <div class="card"><div class="card-icon demo"></div><b>Imitation Learning</b><br/>Learn from expert demonstrations.</div>
-  <div class="card"><div class="card-icon reward"></div><b>Reinforcement Learning</b><br/>Learn by trial, reward, and feedback.</div>
-  <div class="card"><div class="card-icon dataset"></div><b>Offline Robot Learning</b><br/>Learn from existing datasets without new trials.</div>
+<div class="grid-2 visual-cards learning-approach-grid mt-8">
+  <div class="learning-approach-panel learning-approach-imitation">
+    <img src="/images/imitation.png" alt="Robot pushing a T-shaped block" />
+    <div v-click="1" class="learning-highlight-ring"></div>
+  </div>
+  <div class="learning-approach-panel learning-approach-reinforcement">
+    <img src="/images/reinforce.png" alt="Robot pushing a T-shaped block" />
+    <div v-click="1" class="learning-dim-overlay"></div>
+  </div>
 </div>
 
 ---
@@ -213,14 +222,29 @@ The robot copies behavior from demonstrations.
 
 
 The idea is very intuitive: show the robot what to do, then train it to repeat similar behavior.
+<div class="video-card">
+<img src="https://teachmetotalk.com/wp-content/uploads/2018/04/imitation.jpg" alt="Diffusion image generation process from noise to image" />
+</div>
+
 
 ::right::
 
+<div class="demo-loop-pair imitation-demo-loops">
+<b class="human-imitation-label">Human imitation</b>
+<div class="demo-loop human-loop">
+  <div>Watch expert</div>
+  <div>Try the action</div>
+  <div>Get feedback</div>
+  <div>Improve skill</div>
+</div>
+
+<b class="robot-imitation-label">Robot imitation</b>
 <div class="demo-loop">
   <div>Human demo</div>
   <div>Dataset</div>
   <div>Train Policy</div>
   <div>Robot Deploy</div>
+</div>
 </div>
 
 
@@ -418,23 +442,32 @@ layout: two-cols
 
 # Example: Diffusion Policy
 
-- Diffusion Policy is a visuomotor policy that treats robot control as conditional action denoising. Instead of predicting one action directly, it iteratively refines a noisy action sequence into a usable plan. [Project](https://diffusion-policy.cs.columbia.edu/) | [Paper](https://arxiv.org/abs/2303.04137)
-- In the example, the model solves manipulation tasks like Push-T by generating and refining a short trajectory, then executing part of it before replanning. [Demo video](https://diffusion-policy.cs.columbia.edu/videos/pusht_ep6_diffusion.mp4)
-- It is a useful example because diffusion handles multimodal robot behavior well and showed strong results across many benchmark manipulation tasks. [Project page](https://diffusion-policy.cs.columbia.edu/)
+- Example: [UMI](https://umi-gripper.github.io/) uses Diffusion Policy for real-world manipulation. [Paper](https://arxiv.org/abs/2402.10329)
+
+- Data comes from handheld gripper demonstrations, not robot teleoperation.
+
+- Inputs: wrist camera observations and gripper motion.
+
+- Output: relative future robot actions.
+
+- Solves dynamic, bimanual, precise, and long-horizon tasks.
+
+- Useful because human demos transfer to deployable robot policies.
+
 
 ::right::
 
-<figure class="online-figure vla-teaser-figure mb-4">
-  <img src="https://diffusion-policy.cs.columbia.edu/images/teaser.svg" alt="Diffusion Policy project teaser" />
+<figure class="online-figure mb-4">
+  <img src="https://umi-gripper.github.io//resources/teaser.jpg" alt="UMI project teaser" />
 </figure>
 
-<div class="video-card vla-teaser-video">
+<div class="video-card vla-teaser-video centered-video">
   <video autoplay muted loop playsinline controls>
-    <source src="https://diffusion-policy.cs.columbia.edu/videos/pusht_ep6_diffusion.mp4" type="video/mp4" />
+    <source src="https://umi-gripper.github.io//videos/in_the_wild_cup_data_overview.mp4" type="video/mp4" />
   </video>
 </div>
 
-<div class="caption">Diffusion Policy project video: denoise a Push-T action sequence.</div>
+<div class="caption">UMI example: in-the-wild demonstrations become robot policies.</div>
 
 ---
 layout: default
@@ -528,23 +561,33 @@ layout: two-cols
 
 # Example: ACT
 
-- ACT is the policy introduced with the ALOHA system for fine-grained bimanual manipulation. It uses a transformer to predict short chunks of future robot actions from multi-camera observations and joint state. [Project](https://tonyzhaozh.github.io/aloha/) | [Paper](https://arxiv.org/abs/2304.13705)
-- In the ACT example, the robot uses teleoperated demonstrations to learn coordinated two-arm behaviors such as opening lids and handling objects in contact-rich settings. [Demo video](https://tonyzhaozh.github.io/aloha/resources/open_lid.mp4)
-- It is a useful example because it shows that end-to-end imitation learning can work on low-cost hardware with relatively small amounts of task-specific data. [Project page](https://tonyzhaozh.github.io/aloha/)
+- Example: [Mobile ALOHA](https://mobile-aloha.github.io/) uses ACT-style imitation learning for mobile bimanual manipulation. [Paper](https://arxiv.org/abs/2401.02117)
+
+- Data comes from low-cost whole-body teleoperation.
+
+- Inputs: camera observations and robot joint state.
+
+- Output: chunks of future robot actions.
+
+- Solves long-horizon household tasks like cooking, opening cabinets, and rinsing pans.
+
+- Useful because co-training with static ALOHA data improves mobile task success.
 
 ::right::
 
-<figure class="online-figure vla-teaser-figure mb-4">
+<!-- <figure class="online-figure vla-teaser-figure mb-4">
   <img src="https://tonyzhaozh.github.io/aloha/resources/algo.png" alt="ACT architecture overview" />
-</figure>
+</figure> -->
 
-<div class="video-card vla-teaser-video">
+<div class="centered-video-stack">
+<div class="video-card vla-teaser-video centered-video">
   <video autoplay muted loop playsinline controls>
-    <source src="https://tonyzhaozh.github.io/aloha/resources/open_lid.mp4" type="video/mp4" />
+    <source src="https://mobile-aloha.github.io/resources/mobile-aloha.mp4" type="video/mp4" />
   </video>
 </div>
 
-<div class="caption">ALOHA / ACT project video: bimanual task execution.</div>
+<div class="caption">Mobile ALOHA: whole-body bimanual household manipulation.</div>
+</div>
 
 ---
 layout: two-cols
@@ -699,23 +742,33 @@ layout: two-cols
 # Example: VLA Models
 
 
-- OpenVLA is an open-source 7B vision-language-action model trained on 970k robot episodes from Open X-Embodiment. It takes an image plus a language instruction and predicts robot actions. [Project](https://openvla.github.io/) | [Paper](https://arxiv.org/abs/2406.09246)
-- In the OpenVLA example, the model maps commands like object placement or lifting tasks directly into robot control from visual input. [Teaser video](https://openvla.github.io/static/videos/openvla_teaser_video.mp4)
-- It is a useful VLA example because the code, model weights, and training pipeline are all public. [GitHub](https://github.com/openvla/openvla) | [Hugging Face model](https://huggingface.co/openvla/openvla-7b)
+- Example: [OpenVLA](https://openvla.github.io/) is an open-source vision-language-action model. [Paper](https://arxiv.org/abs/2406.09246)
+
+- Data comes from 970k robot episodes in Open X-Embodiment.
+
+- Inputs: camera image and language instruction.
+
+- Output: robot actions.
+
+- Solves language-conditioned tasks like placing, lifting, and moving objects.
+
+- Useful because code, model weights, and training pipeline are public. [GitHub](https://github.com/openvla/openvla) | [Model](https://huggingface.co/openvla/openvla-7b)
 
 ::right::
 
-<figure class="online-figure vla-teaser-figure mb-4">
+<!-- <figure class="online-figure vla-teaser-figure mb-4">
   <img src="https://openvla.github.io/static/images/openvla_teaser.jpg" alt="OpenVLA model architecture" />
-</figure>
+</figure> -->
 
-<div class="video-card vla-teaser-video">
+<div class="centered-video-stack">
+<div class="video-card vla-teaser-video centered-video">
   <video autoplay muted loop playsinline controls>
     <source src="https://openvla.github.io/static/videos/openvla_teaser_video.mp4" type="video/mp4" />
   </video>
 </div>
 
 <div class="caption">OpenVLA project video: image + instruction → action.</div>
+</div>
 
 ---
 layout: two-cols
@@ -802,6 +855,45 @@ layout: two-cols
 </div>
 
 
+---
+layout: two-cols
+---
+
+# Example: Generalist Policy
+
+- Example: [Octo](https://octo-models.github.io/) is an open-source generalist robot policy. [Paper](https://arxiv.org/abs/2405.12213)
+
+- Data comes from 800k robot episodes in Open X-Embodiment.
+
+- Inputs: camera observations plus language command or goal image.
+
+- Output: robot action sequences.
+
+- Solves manipulation tasks across different robots and setups.
+
+- Useful because it can be fine-tuned to new robots with much less data. [GitHub](https://github.com/octo-models/octo)
+
+::right::
+
+<div class="octo-video-grid">
+  <video autoplay muted loop playsinline controls>
+    <source src="https://octo-models.github.io/videos/out_ours_ur5_tiger.mp4" type="video/mp4" />
+  </video>
+  <video autoplay muted loop playsinline controls>
+    <source src="https://octo-models.github.io/videos/out_cmu.mp4" type="video/mp4" />
+  </video>
+  <video autoplay muted loop playsinline controls>
+    <source src="https://octo-models.github.io/videos/out_iliad.mp4" type="video/mp4" />
+  </video>
+  <video autoplay muted loop playsinline controls>
+    <source src="https://octo-models.github.io/videos/out_ours_ur5_cloth.mp4" type="video/mp4" />
+  </video>
+  <video autoplay muted loop playsinline controls class="octo-video-wide">
+    <source src="https://octo-models.github.io/videos/out_fmb.mp4" type="video/mp4" />
+  </video>
+</div>
+
+
 
 ---
 layout: default
@@ -856,26 +948,6 @@ layout: default
   </tbody>
 </table>
 
----
-layout: default
----
-
-# Why End-to-End Robotics is Exciting
-
-- Turns robot behavior into a learning problem instead of a hand-designed pipeline.
-- Lets demonstrations become direct supervision for perception and control.
-- Makes language and vision natural inputs for specifying tasks.
-- Allows one model family to cover many skills, robots, and environments.
-- Gets better as datasets, compute, and foundation models improve.
-
-
-<div class="benefit-wheel">
-  <div>Less manual engineering</div>
-  <div>Learns from data</div>
-  <div>Uses foundation models</div>
-  <div>Handles visual complexity</div>
-  <div>Generalizes across tasks</div>
-</div>
 
 ---
 layout: default
@@ -973,6 +1045,8 @@ Example: [Mobile ALOHA](https://mobile-aloha.github.io/)
 </div>  -->
 
 <!-- </div> -->
+
+
 ---
 layout: two-cols
 ---
@@ -998,12 +1072,13 @@ Example: [NVIDIA Isaac Sim](https://investor.nvidia.com/news/press-release-detai
     <img src="https://developer-blogs.nvidia.com/wp-content/uploads/2025/01/isaac-teleoperation.gif" alt="Diffusion image generation process from noise to image" />
   </div>
   <div>
-    <div class="video-card">
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/8Mwrfvq-GeY?si=UvAn1KmT6SkrO9BV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
+   <div class="video-card">
+    <video autoplay muted loop playsinline controls>
+      <source src="/videos/nvidia.mp4" type="video/mp4" />
+    </video>
+  </div>  
   </div>
 </div>
-
 
 
 
@@ -1071,6 +1146,70 @@ layout: two-cols
 
 </div>
 
+---
+layout: default
+---
+
+# Different ways to collect data via Teleoperation
+
+<div class="teleop-grid">
+  <div>
+    <b>Kinesthetic Teaching</b>
+    <img src="https://ars.els-cdn.com/content/image/1-s2.0-S095741582300154X-gr13.jpg" alt="Diffusion image generation process from noise to image" />
+    <span>Physically move the robot arm through the task while recording states and actions.</span>
+    <div class="teleop-hover">
+      <p><b>Advantage:</b> Intuitive and captures contact-rich motions.</p>
+      <p><b>Disadvantage:</b> Needs backdrivable hardware and is hard to scale.</p>
+    </div>
+  </div>
+
+  <div>
+    <b>Joystick or gamepad</b>
+    <img src="https://i.ytimg.com/vi/3C3JtE3glnk/maxresdefault.jpg" alt="Diffusion image generation process from noise to image" />
+    <span>Use simple controls for navigation, mobile robots, or coarse manipulation.</span>
+    <div class="teleop-hover">
+      <p><b>Advantage:</b> Cheap, familiar, and quick to set up.</p>
+      <p><b>Disadvantage:</b> Low dexterity for precise manipulation.</p>
+    </div>
+  </div>
+
+  <div>
+    <b>Leader Follower Arm</b>
+     <img src="https://raw.githubusercontent.com/MYBOTSHOP/media/main/aloha/box_real.gif" alt="Diffusion image generation process from noise to image" />
+    <span>A human moves a leader device while the robot mirrors the motion.</span>
+    <div class="teleop-hover">
+      <p><b>Advantage:</b> High-quality demos for bimanual tasks.</p>
+      <p><b>Disadvantage:</b> Extra hardware cost and calibration.</p>
+    </div>
+  </div>
+  <div>
+    <b>VR / AR teleoperation</b>
+    <img src="https://hackster.imgix.net/uploads/attachments/1744159/screenshot_from_2024-08-02_10-57-43_m5i9RNwD3M.png?auto=compress%2Cformat&w=830&h=466.875&fit=min&dpr=2.625" alt="Diffusion image generation process from noise to image" />
+    <span>Use headset tracking and hand controllers to operate the robot from its camera view.</span>
+    <div class="teleop-hover">
+      <p><b>Advantage:</b> Strong spatial intuition and remote operation.</p>
+      <p><b>Disadvantage:</b> Latency and depth mismatch can hurt quality.</p>
+    </div>
+  </div>
+  <div>
+    <b>Motion Capture</b>
+    <img src="https://www.xsens.com/hubfs/Screenshot%202024-09-18%20124809.png" alt="Diffusion image generation process from noise to image" />
+    <span>Track a human hand, body, head etc are tracked with a external device</span>
+    <div class="teleop-hover">
+      <p><b>Advantage:</b> Captures natural full-body movement.</p>
+      <p><b>Disadvantage:</b> Retargeting human motion to robots is hard.</p>
+    </div>
+  </div>
+  <div>
+    <b>Shared autonomy</b>
+     <img src="/images/Shared.png" alt="Robot pushing a T-shaped block" />
+    <span>The human gives high-level intent while the robot assists with low-level control.</span>
+    <div class="teleop-hover">
+      <p><b>Advantage:</b> Reduces operator burden and can improve safety.</p>
+      <p><b>Disadvantage:</b> Hard to separate human intent from robot assistance.</p>
+    </div>
+  </div>
+</div>
 
 <!-- ::right::
 
@@ -1093,6 +1232,27 @@ class: text-center
 End-to-end robotics learns a direct path from perception to action compared to tradition human engineered solutions, but scaling data, real-world safety and generalization remain major challenges.
 </div>
 
+
+---
+layout: default
+class: start-imitation
+---
+
+# Simple way to start with Imitation Learning?
+
+- Learn the robot software basics with [ROS 2](https://docs.ros.org/en/rolling/index.html). Interface with robot hardware. Choose your prefered way to teleoperate.
+
+
+
+- Use [Roseeta](https://github.com/iblnkn/rosetta) to bridge ROS 2 with LeRobot-style training data and policies.
+
+
+- Use [LeRobot] Perform the training either locally on you machine or on the cloud. Train a baseline policy like (ACT,VLA or Diffusion Policy)
+
+- Try Delopying the Policy via the Roseeta Bridge 
+
+
+- If you run into trouble, Agentic Coding (Claude, Codex) is your best friend!
 
 ---
 layout: center
@@ -1145,7 +1305,7 @@ layout: center
 class: text-center
 ---
 
-# Reflex Roboitcs/
+# Reflex Roboitcs
 
 <div class="origin-grid ">
 <div class="video-card">
@@ -1162,7 +1322,7 @@ layout: center
 class: text-center
 ---
 
-# Sunday Robotics/
+# Sunday Robotics
 
 <div class="origin-grid ">
 <div class="video-card">
@@ -1178,7 +1338,7 @@ layout: center
 class: text-center
 ---
 
-# Physical Intelligence /
+# Physical Intelligence 
 
 <div class="origin-grid ">
 <div class="video-card">
@@ -1194,7 +1354,7 @@ layout: center
 class: text-center
 ---
 
-# Generalist /
+# Generalist 
 
 <div class="origin-grid ">
 <div class="video-card">
@@ -1210,7 +1370,7 @@ layout: center
 class: text-center
 ---
 
-# Sklid AI /
+# Sklid AI 
 
 <div class="origin-grid ">
 <div class="video-card">
@@ -1242,6 +1402,17 @@ layout: default
 # Reinforcement Learning, A While New Shift In Robot Control
 
 
+
+<div class="origin-grid ">
 <div class="video-card">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/srPz8TRpZ_8?si=uXoyDOH3ufTbcJvY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <video autoplay muted loop playsinline controls>
+    <source src="/videos/unitree.mp4" type="video/mp4" />
+  </video>
+</div>  
 </div>
+
+<!-- <div class="video-card">
+  <video autoplay muted loop playsinline controls>
+    <source src="/videos/engine.mp4" type="video/mp4" />
+  </video>
+</div>   -->
